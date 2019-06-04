@@ -1,27 +1,37 @@
 import React, { Component } from 'react';
 import api from '../../services/api';
 
-import './style.css';
+import { Logo } from '../../components';
 
-import logo from '../../assets/logo.svg';
+import './style.css';
 
 class Home extends Component {
   state = {
-    newBox: ''
+    newBox: '',
+    loading: false,
   }
 
   handleSubmit = async (e) => {
     e.preventDefault();
 
+    this.setState({ loading: true });
+
     const {
       newBox
     } = this.state;
 
-    const response = await api.post('/boxes', {
-      title: newBox
-    });
+    try {
+      const response = await api.post('/boxes', {
+        title: newBox
+      });
 
-    console.log(response.data);
+      this.props
+        .history
+        .push(`/box/${response.data._id}`);
+    } catch (err) {
+      this.setState({ loading: false });
+      console.error(err);
+    }
   }
 
   handleInputChange = (e) => {
@@ -32,19 +42,20 @@ class Home extends Component {
 
   render() {
     const {
-      newBox
+      newBox,
+      loading
     } = this.state;
 
     return (
         <div id="main-container">
             <form onSubmit={this.handleSubmit}>
-              <img src={logo} alt="Logo RocketBox"/>
+              <Logo />
               <input
                 placeholder="Nome do box"
                 value={newBox}
                 onChange={this.handleInputChange}
               />
-              <button type="submit">Criar</button>
+              <button type="submit" disabled={loading}>Criar</button>
             </form>
         </div>
     );

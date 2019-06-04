@@ -37,3 +37,12 @@
 #main-container form button:hover {
   opacity: .85;
 }
+
+#main-container form button:disabled {
+  background-color: darkgrey;
+  cursor: default;
+}
+
+#main-container form button:disabled:hover {
+  opacity: 1;
+}
